@@ -10,6 +10,8 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.MessageDigest;
@@ -37,7 +39,8 @@ public class CmppClient implements Runnable, CmppListener {
 
     public CmppClient(String conf) throws IOException {
         Properties properties = new Properties();
-        properties.load(CmppUtil.getResource(conf, this.getClass()).openStream());
+        FileInputStream inputStream = new FileInputStream(new File(conf)) ;
+        properties.load(inputStream);
         this.spId = properties.getProperty("spId");
         this.sharedSecret = properties.getProperty("sharedSecret");
         this.spClientBindIp = properties.getProperty("spClientBindIp");
@@ -80,6 +83,7 @@ public class CmppClient implements Runnable, CmppListener {
         connector.dispose();
     }
 
+    @Override
     public void run() {
         logger.info("Start ISMGServer=" + ismgServerIp + ":" + ismgServerPort + "\t SPNumber="
                 + spNumber);
@@ -87,8 +91,9 @@ public class CmppClient implements Runnable, CmppListener {
         while (thisThread == Thread.currentThread()) {
             if (session == null || !session.isConnected()) {
                 try {
-                    if (connector != null)
+                    if (connector != null) {
                         connector.dispose();
+                    }
                     connector = new NioSocketConnector();
                     connector.setConnectTimeoutMillis(10 * 1000);
 

@@ -1,23 +1,21 @@
-import java.io.IOException;
-import java.sql.SQLException;
-
 import org.ne81.sp.cmpp.CmppClient;
-import org.ne81.sp.cmpp.CmppLogToDbListener;
 import org.ne81.sp.cmpp.CmppSubmit;
 import org.ne81.sp.cmpp.CmppUtil;
 import org.ne81.sp.cmpp.Constants;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 public class CmppTestClient {
 	public static void main(String args[]) throws IOException, ClassNotFoundException,
 			SQLException, InterruptedException {
-		final CmppClient client = new CmppClient("cmpp.properties");
+		final CmppClient client = new CmppClient("/Users/chenjie/Documents/dev/iop/cmpp/src/main/resources/cmpp.properties");
 
 		//client.addListener(new CmppLogToDbListener("cmpp.properties"));
 
 		client.start();
 		for (int i = 0; i < 1; i++) {
-			while (!client.ready())
-				;
+			while (!client.ready()) ;
 			CmppSubmit submit = new CmppSubmit(Constants.CMPP2_VERSION, "MJS0019907", "13651398480",
 					"01", "0", "10690179", "13651398480", "中文안녕하세요", "linkid");
 			submit.setMsgId(submit.getSequenceId());

@@ -123,9 +123,11 @@ public class CmppSubmit extends CmppMessageHeader implements java.lang.Cloneable
 
 	}
 
+	@Override
 	protected boolean readBody(ByteBuffer buf) {
-		if (buf.remaining() < this.totalLength - Constants.MESSAGE_HEADER_LEN)
+		if (buf.remaining() < this.totalLength - Constants.MESSAGE_HEADER_LEN) {
 			return false;
+		}
 		msgId = buf.getLong();
 		pkTotal = buf.get();
 
@@ -140,8 +142,9 @@ public class CmppSubmit extends CmppMessageHeader implements java.lang.Cloneable
 		feeUserType = buf.get();
 
 		feeTerminalId = CmppUtil.getStringFromBuffer(buf, terminalIdLen);
-		if (version == Constants.CMPP3_VERSION)
+		if (version == Constants.CMPP3_VERSION) {
 			feeTerminalType = buf.get();
+		}
 
 		tp_pid = buf.get();
 
@@ -176,6 +179,7 @@ public class CmppSubmit extends CmppMessageHeader implements java.lang.Cloneable
 		return true;
 	}
 
+	@Override
 	protected boolean writeBody(ByteBuffer buf) {
 		if (buf.remaining() < submitExpMsgLen + msgContent.length + destTerminalId.length
 				* terminalIdLen) {
